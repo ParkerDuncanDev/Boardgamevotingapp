@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="">
+    <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper deep-purple lighten-3">
+                <a href="#!" class="brand-logo center">Logo</a>
+                <ul class="right hide-on-med-and-down">
+                    <li class="active"><a href="badges.html">Game Nights</a></li>
+                    <li><a href="collapsible.html">Friends</a></li>
+                    <li><a href="sass.html">My Shelf</a></li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <div class="container">
+        <h2>My Game Nights</h2>
+            <ul>
+            <% userGameNights.forEach( el => { %>
+                <div class="card green lighten-4">
+                    <li class='userGameNights' data-id='<%= el._id %>'>
+                        <h3 class="gameNightTitle"><%= el.title %></h3>
+                            <p>Date:<%= el.date %> </p>
+                            <p>Vote by: <%= el.voteByDate %> </p>
+                            <p><%= el.description %> </p>
+                            <h4>Invited</h4>
+                            <div class="input-field inline">
+                                <input class="inviteInput" type="text">
+                                <button class="btn waves-effect waves-light inviteBtn" type="submit" name="userInvite">Send Invite
+                                    <i class="material-icons right">send</i>
+                                  </button>
+                                <label for="email_inline">Email/username</label>
+                              </div>
+                            <h4>Attending</h4>
+                            <p>PLACEHOLDER</p>
+                            <h4>Game Choices</h4>
+                                <% el.games.forEach(game => { %>
+                                <span> <%= game.title %> </span>
+                                <% }) %>
+                                <div class="input-field inline">
+                                    <input id="inviteInput" type="text">
+                                    <button class="btn waves-effect waves-light" type="submit" name="action">Send Invite
+                                        <i class="material-icons right">send</i>
+                                    </button>
+                                    <label for="email_inline">Email/username</label>
+                                </div>
+                        <div class="right-align">
+                        <a class="waves-effect waves-teal btn-flat red-text del">delete</a>
+                        </div>
+                    </li>
+                </div>
+            <% }) %>    
+            </ul>
+
+        <h2>Plan your own Game Night!</h2>
+
+        <form action="/gamenight/createGameNight" method='POST'>
+            <label for="gameNightTitle">Title</label>
+            <input type="text" placeholder="Title" name='gameNightTitle'>
+            <label for="gameNightDescription">Description</label>
+            <input type="text" placeholder="Description" name="gameNightDescription">
+            <label for="gameNightDate">Date</label>
+            <input type="date" name="gameNightDate">
+            <label for="gameNightTitle">Vote By Date</label>
+            <input type="date" name="voteByDate">
+            <input type="submit">
+        </form>
+
+        <a href="/logout">Logout</a>
+
+        <script src="js/main.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    </div>
+</body>
+</html>
