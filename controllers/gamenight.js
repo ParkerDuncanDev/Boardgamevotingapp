@@ -1,18 +1,25 @@
-const GameNight = require('../models/Gamenight')
+const GameNight = require('../models/GameNight')
 const User = require('../models/User')
+const Profiles = require('../models/Profiles')
 
 module.exports = {
     getGameNights: async (req,res)=>{
         console.log(req.user)
         try{
             const userGameNights = await GameNight.find({creatorId:req.user.id})
-            const invitedGameNights = await GameNight.find({InvitedId:req.user.id})
+            const invitedGameNights = await GameNight.find({invitedIds:req.user.id.toString()})
             const attendingGameNights = await GameNight.find({attendingIds:req.user.id})
-            res.render('gamenight.ejs', {userGameNights: userGameNights, invitedGameNights: invitedGameNights, attendingGameNights: attendingGameNights, user: req.user})
+            const profiles = await Profiles.find()
+            res.render('gamenight.ejs', {userGameNights: userGameNights,
+                                         invitedGameNights: invitedGameNights,
+                                         attendingGameNights: attendingGameNights,
+                                         profiles: profiles,
+                                         user: req.user})
         }catch(err){
             console.log(err)
         }
     },
+
     createGameNight: async (req, res)=>{
         try{
             await GameNight.create({
@@ -33,10 +40,14 @@ module.exports = {
             console.log(err)
         }
     },
+
     acceptInvite: async (req, res)=>{
+        const gameNightId = req.body.gameNightIdFromJSFile
+        const userId = req.user.id
+        console.log(`gameNightId is ${gameNightId}, userId is ${userId}`)
         try{
-            await GameNight.findOneAndUpdate({_id:req.body.GameNightIdFromJSFile},{
-                $push: {attendingIds: req.user.id}
+            await GameNight.findOneAndUpdate({_id: gameNightId},{
+                $addToSet: {attendingIds: userId.toString()}
             })
             console.log('Invite Accepted')
             res.json('Invite Accepted')
@@ -45,9 +56,12 @@ module.exports = {
         }
     },
     declineInvite: async (req, res)=>{
+        const gameNightId = req.body.gameNightIdFromJSFile
+        const userId = req.user.id
+        console.log(`gameNightId is ${gameNightId}, userId is ${userId}`)
         try{
-            await GameNight.findOneAndUpdate({_id:req.body.GameNightIdFromJSFile},{
-                $pull: {invitedIds: req.user.id}
+            await GameNight.findOneAndUpdate({_id: gameNightId},{
+                $pull: {invitedIds: userId.toString()}
             })
             console.log('Invite Declined')
             res.json('Invite Declined')
@@ -88,7 +102,7 @@ module.exports = {
             await GameNight.findByIdAndUpdate(gameNightId,
                 { $addToSet: { invitedIds: invitedUser._id.toString() } },
                 {new: true})
-                console.log( await Todo.findById(userID))
+                console.log( await GameNight.findById(gameNightId))
             res.json('todo shared')
         } catch (error) {
             
