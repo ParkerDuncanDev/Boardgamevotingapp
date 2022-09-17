@@ -1,3 +1,5 @@
+<!-- NOTE: webpage is having trouble changing who the acive user is. If a user logs out and then back into a different account it is behaving as though the previous user is still logged in. for example, Laney can be logged in and send juni an invite to a gamenight, laney can log out and juni can log in, when juni logs in it will show them the invite but behave as though they are laney. the variable user.id is not updating. check with 100devs group for a fix. -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,9 +29,9 @@
         <!-- this section contains the gamenight the user has created and has buttons for adding games and inviting other users -->
         <h1>welcome <%= user.userName %> </h1>
         <h2>My Game Nights</h2>
-
             <ul>
             <% userGameNights.forEach( el => { %>
+                <% gameNightId = el._id %> 
                 <div class="card green lighten-4">
                     <li class='userGameNights' data-id='<%= el._id %>'>
                         <!-- basic info about the gamenight -->
@@ -52,7 +54,7 @@
                                     <i class="material-icons right">send</i>
                                   </button>
                                 <label for="email_inline">Email/username</label>
-                              </div>
+                            </div>
                              
                             <h4>Attending</h4>
                             <!-- shows users who accepted invites -->
@@ -73,6 +75,27 @@
                                     </button>
                                     <label for="email_inline">Game Title</label>
                                 </div>
+
+                            <h4>Comments</h4>
+                            <div data-userId='<%=user.id%>' data-userName='<%=user.userName%>'>
+                                <input type="text" class="commentInput" >
+                                <button class="btn waves-effect waves-light postCommentBtn" type="submit" name="action" >Post Comment
+                                </button>
+                            </div>
+                            <div>
+                                <!-- shows users who accepted invites -->
+                            <% comments.forEach(comment => { %>
+                                <!-- finds user with matching id to gamenights invited user ids -->
+                                <% if (comment.gameNightId == gameNightId) { %>
+                                 <p class="commentUserName blue-text"> <%= comment.userName %></p>
+                                 <span class="commentDate"><%= comment.date.toDateString() %></span>
+                                 <p> <blockquote> <%= comment.comment %> </blockquote></p>
+                                <% } %>
+                             <% }) %> 
+                            </div>
+                            
+
+                           
                         <div class="right-align">
                         <a class="waves-effect waves-teal btn-flat red-text del">delete</a>
                         </div>
@@ -81,45 +104,72 @@
             <% }) %>    
             </ul>
         <h2>Invites</h2>
-            <% invitedGameNights.forEach( el => { %>
-                <div class="card green lighten-4">
-                    <li class='userGameNights' data-id='<%= el._id %>'>
-                        <h3 class="gameNightTitle"><%= el.title %></h3>
-                            <p>Date:<%= el.date %> </p>
-                            <p>Vote by: <%= el.voteByDate %> </p>
-                            <p><%= el.description %> </p>
-                        <h4>Invited</h4>
-                        <!-- shows invited users -->
-                        <!-- invite accept and decline button logic -->
-                        <% if (el.invitedIds.includes(user.id) && !el.attendingIds.includes(user.id)) { %>
-                          <p> You were invited! Would you like to accept? </p>
-                          <a class="waves-effect btn-flat green-text acceptBtn">Accept!</a> <a class="waves-effect  btn-flat red-text declineBtn">No thanks!</a>
-                        <% } %>
-                        <!-- shows users who accepted invites -->
-                        <% el.invitedIds.forEach(userid => { %>
-                            <!-- finds user with matching id to gamenights invited user ids -->
-                            <% user = users.find(ele => ele._id == userid ) %>
-                            <p> <%= user.userName %>  </p>
-                         <% }) %> 
-
-                        <h4>Attending</h4>
-                        <!-- shows users who accepted invites -->
-                        <% el.attendingIds.forEach(userid => { %>
-                            <!-- finds user with matching id to gamenights invited user ids -->
-                            <% user = users.find(ele => ele._id == userid ) %>
-                            <p> <%= user.userName %>  </p>
-                         <% }) %> 
-
-                        <h4>Game Choices</h4>
-                        <!-- shows game choices TODO: ADD VOTE BUTTONS -->
-                            <% el.games.forEach(game => { %>
-                            <span> <%= game.title %> </span>
+        <div>
+            <ul>
+                <% invitedGameNights.forEach( el => { %>
+                    <div class="card green lighten-4">
+                        <% gameNightId = el._id %>
+                        <li class='userGameNights' data-id='<%= el._id %>'>
+                            <h3 class="gameNightTitle"><%= el.title %></h3>
+                                <p>Date:<%= el.date %> </p>
+                                <p>Vote by: <%= el.voteByDate %> </p>
+                                <p><%= el.description %> </p>
+                            <h4>Invited</h4>
+                            <!-- shows invited users -->
+                            <!-- invite accept and decline button logic -->
+                            <% if (el.invitedIds.includes(user._id) && !el.attendingIds.includes(user._id)) { %>
+                            <p> You were invited! Would you like to accept? </p>
+                            <a class="waves-effect btn-flat green-text acceptBtn">Accept!</a> <a class="waves-effect  btn-flat red-text declineBtn">No thanks!</a>
+                            <% } %>
+                            <!-- shows users who accepted invites -->
+                            <% el.invitedIds.forEach(userid => { %>
+                                <!-- finds user with matching id to gamenights invited user ids -->
+                                <% invitedUser = users.find(ele => ele._id == userid ) %>
+                                <p> <%= invitedUser.userName %>  </p>
                             <% }) %> 
-                            </div>
-                    </div>
-                </li>
-            </div>
-        <% }) %>    
+
+                            <h4>Attending</h4>
+                            <!-- shows users who accepted invites -->
+                            <% el.attendingIds.forEach(userid => { %>
+                                <!-- finds user with matching id to gamenights invited user ids -->
+                                <% attendingUser = users.find(ele => ele._id == userid ) %>
+                                <p> <%= attendingUser.userName %>  </p>
+                            <% }) %> 
+
+                            <h4>Game Choices</h4>
+                            <!-- shows game choices TODO: ADD VOTE BUTTONS -->
+                                <% el.games.forEach(game => { %>
+                                <span> <%= game.title %> </span>
+                                <% }) %> 
+
+                                
+                                    <!-- shows comments to attending users -->
+                                    <% if (el.attendingIds.includes(user.id)) { %>
+                                        <h4>Comments</h4>
+                                        <div data-userId='<%=user.id%>' data-userName='<%=user.userName%>'>
+                                            <input type="text" class="commentInput" >
+                                            <button class="btn waves-effect waves-light postCommentBtn" type="submit" name="action" >Post Comment
+                                            </button>
+                                        </div>
+                                         <div>
+                                    <% comments.forEach(comment => { %>
+                                        <!-- finds user with matching id to gamenights invited user ids -->
+                                        <% if (comment.gameNightId == gameNightId) { %>
+                                        <p class="commentUserName blue-text"> <%= comment.userName %></p>
+                                        <span class="commentDate"><%= comment.date.toDateString() %></span>
+                                        <p> <blockquote> <%= comment.comment %> </blockquote></p>
+                                        <% } %>
+                                    <% }) %> 
+                                    </div>
+                                    <% } %>
+                                
+                                         
+                    </li>
+                </div>
+                <% }) %>    
+            </ul>
+        </div>
+
         <h2>Plan your own Game Night!</h2>
 
         <form action="/gamenight/createGameNight" method='POST'>

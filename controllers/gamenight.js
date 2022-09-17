@@ -1,6 +1,7 @@
 const GameNight = require('../models/GameNight')
 const User = require('../models/User')
-const Profiles = require('../models/Profiles')
+const Comments = require('../models/Comments')
+
 
 module.exports = {
     getGameNights: async (req,res)=>{
@@ -10,13 +11,18 @@ module.exports = {
             const invitedGameNights = await GameNight.find({invitedIds:req.user.id.toString()})
             const attendingGameNights = await GameNight.find({attendingIds:req.user.id})
             const users = await User.find().select("-password")
-            res.render('gamenight.ejs', {userGameNights: userGameNights,
+            const user = req.user
+            const comments = await Comments.find()
+            res.render('gamenight.ejs', {
+                                        //this is the CLIENT user
+                                         user: user,
+                                         userGameNights: userGameNights,
                                          invitedGameNights: invitedGameNights,
                                          attendingGameNights: attendingGameNights,
+                                         comments: comments,
                                          //this is ALL users
                                          users: users,
-                                         //this is the CLIENT user
-                                         user: req.user})
+                                         })
         }catch(err){
             console.log(err)
         }
@@ -75,6 +81,7 @@ module.exports = {
         console.log(req.body.gameNightIdFromJSFile)
         try{
             await GameNight.findOneAndDelete({_id:req.body.gameNightIdFromJSFile})
+            await Comments.deleteMany({gameNightId:req.body.gameNightIdFromJSFile})
             console.log('Deleted Game Night')
             res.json('Deleted It')
         }catch(err){
