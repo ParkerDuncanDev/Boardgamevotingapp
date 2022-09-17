@@ -9,11 +9,13 @@ module.exports = {
             const userGameNights = await GameNight.find({creatorId:req.user.id})
             const invitedGameNights = await GameNight.find({invitedIds:req.user.id.toString()})
             const attendingGameNights = await GameNight.find({attendingIds:req.user.id})
-            const profiles = await Profiles.find()
+            const users = await User.find().select("-password")
             res.render('gamenight.ejs', {userGameNights: userGameNights,
                                          invitedGameNights: invitedGameNights,
                                          attendingGameNights: attendingGameNights,
-                                         profiles: profiles,
+                                         //this is ALL users
+                                         users: users,
+                                         //this is the CLIENT user
                                          user: req.user})
         }catch(err){
             console.log(err)
@@ -28,14 +30,14 @@ module.exports = {
                                     description: req.body.gameNightDescription,
                                     date: req.body.gameNightDate,
                                     invitedIds: [],
-                                    attendingIds: [],
+                                    attendingIds: [req.user.id,],
                                     games: [],
                                     voteType: "simple",
                                     voteByDate: req.body.voteByDate
                                     
                                     })
             console.log('Gamenight has been added!')
-            res.redirect('/GameNight')
+            res.redirect('/gamenight')
         }catch(err){
             console.log(err)
         }
