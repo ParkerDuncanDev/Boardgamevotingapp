@@ -25,7 +25,9 @@
 
     <div class="container">
         <!-- this section contains the gamenight the user has created and has buttons for adding games and inviting other users -->
+        <h1>welcome <%= user.userName %> </h1>
         <h2>My Game Nights</h2>
+
             <ul>
             <% userGameNights.forEach( el => { %>
                 <div class="card green lighten-4">
@@ -39,7 +41,9 @@
                             <h4>Invited</h4>
                             <!-- shows currently invited users -->
                             <% el.invitedIds.forEach(userid => { %>
-                                <p> <%= userid %> </p>
+                                <!-- finds user with matching id to gamenights invited user ids -->
+                                <% user = users.find(ele => ele._id == userid ) %>
+                                <p> <%= user.userName %>  </p>
                              <% }) %> 
                              <!-- input field for inviting new user -->
                             <div class="input-field inline">
@@ -52,9 +56,11 @@
                              
                             <h4>Attending</h4>
                             <!-- shows users who accepted invites -->
-                            <% el.invitedIds.forEach(id => { %>
-                                <p> <%= id %> </p>
-                             <% }) %>
+                            <% el.attendingIds.forEach(userid => { %>
+                                <!-- finds user with matching id to gamenights invited user ids -->
+                                <% user = users.find(ele => ele._id == userid ) %>
+                                <p> <%= user.userName %>  </p>
+                             <% }) %> 
                             
                             <h4>Game Choices</h4>
                                 <% el.games.forEach(game => { %>
@@ -63,10 +69,9 @@
                                 <!-- TODO: make this a game add input -->
                                 <div class="input-field inline">
                                     <input id="inviteInput" type="text">
-                                    <button class="btn waves-effect waves-light" type="submit" name="action">Send Invite
-                                        <i class="material-icons right">send</i>
+                                    <button class="btn waves-effect waves-light" type="submit" name="action">Add Game
                                     </button>
-                                    <label for="email_inline">Email/username</label>
+                                    <label for="email_inline">Game Title</label>
                                 </div>
                         <div class="right-align">
                         <a class="waves-effect waves-teal btn-flat red-text del">delete</a>
@@ -90,16 +95,20 @@
                           <p> You were invited! Would you like to accept? </p>
                           <a class="waves-effect btn-flat green-text acceptBtn">Accept!</a> <a class="waves-effect  btn-flat red-text declineBtn">No thanks!</a>
                         <% } %>
-                        <% el.invitedIds.forEach(id => { %>
-                           <p> <%= id %> </p>
-                        <% }) %> 
+                        <!-- shows users who accepted invites -->
+                        <% el.invitedIds.forEach(userid => { %>
+                            <!-- finds user with matching id to gamenights invited user ids -->
+                            <% user = users.find(ele => ele._id == userid ) %>
+                            <p> <%= user.userName %>  </p>
+                         <% }) %> 
 
                         <h4>Attending</h4>
-                        <!-- shows attending users -->
-                        <p> <% el.attendingIds.forEach(id => { %>
-                             <p> <%= id %>  </p>
-
-                          <% }) %> </p>
+                        <!-- shows users who accepted invites -->
+                        <% el.attendingIds.forEach(userid => { %>
+                            <!-- finds user with matching id to gamenights invited user ids -->
+                            <% user = users.find(ele => ele._id == userid ) %>
+                            <p> <%= user.userName %>  </p>
+                         <% }) %> 
 
                         <h4>Game Choices</h4>
                         <!-- shows game choices TODO: ADD VOTE BUTTONS -->
