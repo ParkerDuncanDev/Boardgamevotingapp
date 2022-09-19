@@ -13,6 +13,7 @@ router.put('/acceptInvite', gameNightController.acceptInvite)
 
 router.put('/declineInvite', gameNightController.declineInvite)
 
+router.put('/addGame', gameNightController.addGame)
 router.delete('/deleteGameNight', gameNightController.deleteGameNight)
 
 module.exports = router

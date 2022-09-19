@@ -6,6 +6,7 @@ const inviteBtn = document.querySelectorAll('.inviteBtn')
 const acceptBtn = document.querySelectorAll('.acceptBtn')
 const declineBtn = document.querySelectorAll('.declineBtn')
 const postCommentBtn = document.querySelectorAll('.postCommentBtn')
+const addGameBtn = document.querySelectorAll('.addGameBtn')
 
 //event listener placements
     Array.from(deleteBtn).forEach((el)=>{
@@ -28,6 +29,9 @@ const postCommentBtn = document.querySelectorAll('.postCommentBtn')
     })
     Array.from(postCommentBtn).forEach((el)=>{
         el.addEventListener('click', postComment)
+    })
+    Array.from(addGameBtn).forEach((el)=>{
+        el.addEventListener('click', addGame)
     })
 
 
@@ -95,17 +99,20 @@ async function declineInvite(){
     }
 }
 
-//Deletes gamenight
-async function deleteGameNight(){
-    console.log('delete button clicked')
+//game selection functions
+async function addGame(){
+    console.log('adding Game')
     const gameNightId = this.parentNode.parentNode.dataset.id
+    const addGameInput = this.previousElementSibling.value
     console.log(gameNightId)
+    console.log(addGameInput)
     try{
-        const response = await fetch('gamenight/deleteGameNight', {
-            method: 'delete',
+        const response = await fetch('gamenight/addGame', {
+            method: 'put',
             headers: {'Content-type': 'application/json'},
             body: JSON.stringify({
-                'gameNightIdFromJSFile': gameNightId
+                'gameNightIdFromJSFile': gameNightId,
+                'gameTitle': addGameInput
             })
         })
         const data = await response.json()
@@ -134,6 +141,27 @@ async function postComment(){
                 'comment': commentInput,
                 'userId': userId,
                 'userName': userName
+            })
+        })
+        const data = await response.json()
+        console.log(data)
+        location.reload()
+    }catch(err){
+        console.log(err)
+    }
+}
+
+//Deletes gamenight
+async function deleteGameNight(){
+    console.log('delete button clicked')
+    const gameNightId = this.parentNode.parentNode.dataset.id
+    console.log(gameNightId)
+    try{
+        const response = await fetch('gamenight/deleteGameNight', {
+            method: 'delete',
+            headers: {'Content-type': 'application/json'},
+            body: JSON.stringify({
+                'gameNightIdFromJSFile': gameNightId
             })
         })
         const data = await response.json()
