@@ -1,44 +1,23 @@
-# Introduction
+# My Awesome Project
+This is a web application to coordinate and plan game nights with a group supporting video games, boardgames, and TTRPGs. Users can vote on what activities they would like to do and after a specified date the votes are collected and tallied.
 
-A Simple ToDo App is built using the MVC Architecture, we have also implemented "authorization" so folx can sign up, customize & personalize the app 
+**Link to project:** not yet live, will add link when project releases
 
----
+[![Image from Gyazo](https://i.gyazo.com/6f12cf11e46498116885deebd1bd0e21.gif)](https://gyazo.com/6f12cf11e46498116885deebd1bd0e21)
 
-> Be sure to add that lovely star 😀 and fork it for your own copy
+## How It's Made:
 
----
+**Tech used:** 
+Front-End: HTML, CSS, Javascript, EJS, Materialize
+Back-end: Node.js, Express, MongoDB, Mongoose
 
-# Objectives
+The application uses MongoDB to collect user data and inputs to generate 'Game Nights' that can be shared with users. Invited users who accept can leave comments and vote on the proposed events to be held. All serverside requests are handeled via Node.js using MVC architecture and presented to the user vis EJS templates.
 
-- It's a beginner level app created to understand how MVC concept and logins are added
+## Optimizations
+I would like to add various voting methods such as ranked choice to give groups more control over how the chosen game will be selected.
 
----
+A user profile page where users can customize their profile and share what games they have voted on and played.
 
-# Who is this for? 
+## Lessons Learned:
 
-- It's for beginners & intermediates with little more experience, to help understand the various aspects of building a node app with some complex features
-
----
-
-# Packages/Dependencies used 
-
-bcrypt, connect-mongo, dotenv, ejs, express, express-flash, express-session, mongodb, mongoose, morgan, nodemon, passport, passport-local, validator
-
----
-
-# Install all the dependencies or node packages used for development via Terminal
-
-`npm install` 
-
----
-
-# Things to add
-
-- Create a `.env` file and add the following as `key: value` 
-  - PORT: 2121 (can be any port example: 3000) 
-  - DB_STRING: `your database URI` 
- ---
- 
- Have fun testing and improving it! 😎
-
-
+This was a very exciting and fun experience working with more back-end frameworks and building out a user based application. I have developed a much deeper understanding of database manipulation and server calls and look forward to leveraging this to build this and other apps with greater scopes and functions.
