@@ -29,7 +29,7 @@ const declineBtn = document.querySelectorAll('.declineBtn')
 //Invite, accept, and decline functions
 async function inviteUser(){
     console.log('user invited')
-    const gameNightId = this.parentNode.parentNode.dataset.id
+    const gameNightId = this.parentNode.parentNode.parentNode.dataset.id
     const inviteUserInput = this.previousElementSibling.value
     console.log(gameNightId)
     console.log(inviteUserInput)

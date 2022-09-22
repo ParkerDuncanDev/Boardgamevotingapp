@@ -8,7 +8,7 @@ const flash = require('express-flash')
 const logger = require('morgan')
 const connectDB = require('./config/database')
 const mainRoutes = require('./routes/main')
-const shelfRoutes = require('./routes/shelf')
+const profileRoutes = require('./routes/profile')
 const gameNightRoutes = require('./routes/gamenight')
 
 require('dotenv').config({path: './config/.env'})
@@ -41,6 +41,7 @@ app.use(flash())
   
 app.use('/', mainRoutes)
 app.use('/gamenight', gameNightRoutes)
+app.use('/profile', profileRoutes)
  
 app.listen(process.env.PORT, ()=>{
     console.log('Server is running, you better catch it!')

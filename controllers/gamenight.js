@@ -1,6 +1,6 @@
 const GameNight = require('../models/GameNight')
 const User = require('../models/User')
-const Profiles = require('../models/Profiles')
+
 
 module.exports = {
     getGameNights: async (req,res)=>{
@@ -49,7 +49,8 @@ module.exports = {
         console.log(`gameNightId is ${gameNightId}, userId is ${userId}`)
         try{
             await GameNight.findOneAndUpdate({_id: gameNightId},{
-                $addToSet: {attendingIds: userId.toString()}
+                $addToSet: {attendingIds: userId.toString()},
+                $pull: {invitedIds: userId.toString()}
             })
             console.log('Invite Accepted')
             res.json('Invite Accepted')
