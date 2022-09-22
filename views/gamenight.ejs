@@ -3,7 +3,6 @@
     <div class="container">
         <!-- this section contains the gamenight the user has created and has buttons for adding games and inviting other users -->
         <h2>My Game Nights</h2>
-
             <ul>
             <% userGameNights.forEach( el => { %>
                 <div class="card green lighten-4">
@@ -75,6 +74,7 @@
                 </div>
             <% }) %>    
             </ul>
+
         <h2>Attending</h2>
             <ul>
             <% attendingGameNights.forEach( el => { %>
@@ -140,9 +140,9 @@
                         </div>
                         <% } %>
                         <% }) %>  
-    </ul>  
-        <h2>Plan your own Game Night!</h2>
+            </ul>  
 
+        <h2>Plan your own Game Night!</h2>
         <form action="/gamenight/createGameNight" method='POST'>
             <label for="gameNightTitle">Title</label>
             <input type="text" placeholder="Title" name='gameNightTitle'>
