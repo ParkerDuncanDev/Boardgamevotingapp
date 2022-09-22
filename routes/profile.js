@@ -1,9 +1,12 @@
 const express = require('express')
 const router = express.Router()
-const shelfController = require('../controllers/shelf') 
+const profileController = require('../controllers/profile') 
 const { ensureAuth, ensureGuest } = require('../middleware/auth')
 
-router.get('/', ensureAuth, shelfController.getShelfs)
+router.get('/', ensureAuth, profileController.getProfileForOwner)
+
+router.get('/:id', ensureAuth, profileController.getProfile)
+
 
 // router.post('/createTodo', shelfController.createTodo)
 

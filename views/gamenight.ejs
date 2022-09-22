@@ -1,78 +1,73 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body class="">
-    <div class="navbar-fixed">
-        <nav>
-            <div class="nav-wrapper deep-purple lighten-3">
-                <a href="#!" class="brand-logo center">Logo</a>
-                <ul class="right hide-on-med-and-down">
-                    <li class="active"><a href="badges.html">Game Nights</a></li>
-                    <li><a href="collapsible.html">Friends</a></li>
-                    <li><a href="sass.html">My Shelf</a></li>
-                </ul>
-            </div>
-        </nav>
-    </div>
 
+<%- include('partials/header') -%>
     <div class="container">
         <!-- this section contains the gamenight the user has created and has buttons for adding games and inviting other users -->
-        <h1>welcome <%= user.userName %> </h1>
         <h2>My Game Nights</h2>
 
             <ul>
             <% userGameNights.forEach( el => { %>
                 <div class="card green lighten-4">
                     <li class='userGameNights' data-id='<%= el._id %>'>
-                        <!-- basic info about the gamenight -->
-                        <h3 class="gameNightTitle"><%= el.title %></h3>
-                            <p>Date:<%= el.date %> </p>
-                            <p>Vote by: <%= el.voteByDate %> </p>
-                            <p><%= el.description %> </p>
-
+                        <!-- info -->
+                        <div class="center-align">
+                                <!-- basic info about the gamenight -->
+                                <h3 class="gameNightTitle"><%= el.title %></h3>
+                                    <p>Date: <%= el.date %> </p>
+                                    <p><%= el.description %> </p>
+                        </div>
+                        <!-- invited -->
+                        <div class="center-align right">
                             <h4>Invited</h4>
                             <!-- shows currently invited users -->
-                            <% el.invitedIds.forEach(userid => { %>
-                                <!-- finds user with matching id to gamenights invited user ids -->
-                                <% user = users.find(ele => ele._id == userid ) %>
-                                <p> <%= user.userName %>  </p>
-                             <% }) %> 
-                             <!-- input field for inviting new user -->
+                            <ul>
+                                <% el.invitedIds.forEach(userid => { %>
+                                    <!-- finds user with matching id to gamenights invited user ids -->
+                                    <% invitedUser = users.find(ele => ele._id == userid ) %>
+                                    <li>
+                                    <a href="/profile/<%= invitedUser.id %> "> <%= invitedUser.userName %> </a>
+                                    </li>
+                                <% }) %>
+                            </ul>
+                                <!-- input field for inviting new user -->
                             <div class="input-field inline">
                                 <input class="inviteInput" type="text">
                                 <button class="btn waves-effect waves-light inviteBtn" type="submit" name="userInvite">Send Invite
                                     <i class="material-icons right">send</i>
-                                  </button>
+                                    </button>
                                 <label for="email_inline">Email/username</label>
-                              </div>
-                             
+                                </div>
+                        </div>
+                        <!-- attending -->
+                        <div class="center-align left">
                             <h4>Attending</h4>
                             <!-- shows users who accepted invites -->
-                            <% el.attendingIds.forEach(userid => { %>
-                                <!-- finds user with matching id to gamenights invited user ids -->
-                                <% user = users.find(ele => ele._id == userid ) %>
-                                <p> <%= user.userName %>  </p>
-                             <% }) %> 
-                            
-                            <h4>Game Choices</h4>
-                                <% el.games.forEach(game => { %>
-                                <span> <%= game.title %> </span>
-                                <% }) %>
-                                <!-- TODO: make this a game add input -->
-                                <div class="input-field inline">
-                                    <input id="inviteInput" type="text">
-                                    <button class="btn waves-effect waves-light" type="submit" name="action">Add Game
-                                    </button>
-                                    <label for="email_inline">Game Title</label>
-                                </div>
+                                <ul>
+                                    <% el.attendingIds.forEach(userid => { %>
+                                        <!-- finds user with matching id to gamenights invited user ids -->
+                                        <% attendingUser = users.find(ele => ele._id == userid ) %>
+                                        <li>
+                                        <a href="/profile/<%= attendingUser.id %> "> <%= attendingUser.userName %> </a>
+                                        </li>
+                                        <% }) %>
+                                </ul>
+                        </div>
+                        <div class="clearfix"></div>
+                        <!-- game choices -->
+                        <div class="center-align">
+                        <h4>Game Choices</h4>
+                        <p>Vote by: <%= el.voteByDate %> </p>
+                            <% el.games.forEach(game => { %>
+                            <span> <%= game.title %> </span>
+                            <% }) %>
+                            <!-- TODO: make this a game add input -->
+                            <div class="input-field inline">
+                                <input id="inviteInput" type="text">
+                                <button class="btn waves-effect waves-light" type="submit" name="action">Add Game
+                                </button>
+                                <label for="email_inline">Game Title</label>
+                            </div>
+                        </div>
+                        <!-- delete Button -->
                         <div class="right-align">
                         <a class="waves-effect waves-teal btn-flat red-text del">delete</a>
                         </div>
@@ -80,46 +75,72 @@
                 </div>
             <% }) %>    
             </ul>
-        <h2>Invites</h2>
-            <% invitedGameNights.forEach( el => { %>
-                <div class="card green lighten-4">
-                    <li class='userGameNights' data-id='<%= el._id %>'>
-                        <h3 class="gameNightTitle"><%= el.title %></h3>
-                            <p>Date:<%= el.date %> </p>
-                            <p>Vote by: <%= el.voteByDate %> </p>
-                            <p><%= el.description %> </p>
-                        <h4>Invited</h4>
-                        <!-- shows invited users -->
-                        <!-- invite accept and decline button logic -->
-                        <% if (el.invitedIds.includes(user.id) && !el.attendingIds.includes(user.id)) { %>
-                          <p> You were invited! Would you like to accept? </p>
-                          <a class="waves-effect btn-flat green-text acceptBtn">Accept!</a> <a class="waves-effect  btn-flat red-text declineBtn">No thanks!</a>
-                        <% } %>
-                        <!-- shows users who accepted invites -->
-                        <% el.invitedIds.forEach(userid => { %>
-                            <!-- finds user with matching id to gamenights invited user ids -->
-                            <% user = users.find(ele => ele._id == userid ) %>
-                            <p> <%= user.userName %>  </p>
-                         <% }) %> 
-
-                        <h4>Attending</h4>
-                        <!-- shows users who accepted invites -->
-                        <% el.attendingIds.forEach(userid => { %>
-                            <!-- finds user with matching id to gamenights invited user ids -->
-                            <% user = users.find(ele => ele._id == userid ) %>
-                            <p> <%= user.userName %>  </p>
-                         <% }) %> 
-
-                        <h4>Game Choices</h4>
-                        <!-- shows game choices TODO: ADD VOTE BUTTONS -->
-                            <% el.games.forEach(game => { %>
-                            <span> <%= game.title %> </span>
-                            <% }) %> 
+        <h2>Attending</h2>
+            <ul>
+            <% attendingGameNights.forEach( el => { %>
+                <% if (el.creatorId != user.id) { %>
+                 
+                    <div class="card green lighten-4">
+                        <li class='userGameNights' data-id='<%= el._id %>'>
+                            <!-- title & date -->
+                            <div class="center-align"> 
+                                <h3 class="gameNightTitle"><%= el.title %></h3>
+                                <p>Date:<%= el.date %> </p>
+                                <p><%= el.description %> </p>
                             </div>
-                    </div>
-                </li>
-            </div>
-        <% }) %>    
+                            
+                            <!-- invited -->
+                            <div class="right">
+                                <% if (el.invitedIds.length != 0) { %>
+                                    <h4>Invited</h4>
+                                    <!-- shows invited users -->
+                                    <!-- invite accept and decline button logic -->
+                                    <% if (el.invitedIds.includes(user.id) && !el.attendingIds.includes(user.id)) { %>
+                                        <p> You were invited! Would you like to accept? </p>
+                          <a class="waves-effect btn-flat green-text acceptBtn">Accept!</a> <a class="waves-effect  btn-flat red-text declineBtn">No thanks!</a>
+                          <% } %>
+                          <!-- shows users who accepted invites -->
+                          <ul>
+                              <% el.invitedIds.forEach(userid => { %>
+                                <!-- finds user with matching id to gamenights invited user ids -->
+                                <% invitedUser = users.find(ele => ele._id == userid ) %>
+                                <li>
+                                    <a href="/profile/<%= invitedUser.id %> "> <%= invitedUser.userName %> </a>
+                                </li>
+                                <% }) %>
+                            </ul>
+                            <% } %>
+                        </div>
+                        
+                        <!-- attending -->
+                        <div class="left">
+                            <h4>Attending</h4>
+                            <!-- shows users who accepted invites -->
+                            <ul>
+                                <% el.attendingIds.forEach(userid => { %>
+                                    <!-- finds user with matching id to gamenights invited user ids -->
+                                    <% attendingUser = users.find(ele => ele._id == userid ) %>
+                                    <li>
+                                        <a href="/profile/<%= attendingUser.id %> "> <%= attendingUser.userName %> </a>
+                                    </li>
+                                    <% }) %>
+                                </ul>
+                            </div>
+                            <div class="clearfix"></div>
+                            <!-- game Choices -->
+                            <div class="center-align">
+                                <h4>Game Choices</h4>
+                                <p>Vote by: <%= el.voteByDate %> </p>
+                                <!-- shows game choices TODO: ADD VOTE BUTTONS -->
+                                <% el.games.forEach(game => { %>
+                                    <span> <%= game.title %> </span>
+                                    <% }) %> 
+                                </div>
+                            </li>
+                        </div>
+                        <% } %>
+                        <% }) %>  
+    </ul>  
         <h2>Plan your own Game Night!</h2>
 
         <form action="/gamenight/createGameNight" method='POST'>

@@ -1,0 +1,84 @@
+<%- include('partials/header') -%>
+<body>
+    <div class="container">
+        <h1>Welcome back <%= profile.userName %> </h1>
+        <!-- profile and bio -->
+        <div class="row">
+
+            <div class="col s6">
+                <h2><%= profile.userName %> </h2>
+                <ul>
+                    <li>Age: <%= profile.age %> </li>
+                    <li>Gender: <%= profile.gender %> </li>
+                    <li>Pronouns: <%= profile.pronouns %> </li>
+                </ul>
+            </div>
+
+            <div class="green col s6 card bio">
+                    <h5><%= profile.userName %>'s Bio </h5>
+                    <p> <%= profile.bio %> </p>
+            </div>
+
+        </div>
+
+        <!-- invites -->
+        <div class="row">
+            <ul>
+                <% invites.forEach(invite => { %>
+                    <% if (invite.invitedIds.includes(user.id) && !invite.attendingIds.includes(user.id)) { %>
+                        <div class="card green lighten-4">
+                            <li class='userGameNights' data-id='<%= invite._id %>'>
+                                <h3 class="gameNightTitle"><%= invite.title %></h3>
+                                    <p>Date:<%= invite.date %> </p>
+                                    <p>Vote by: <%= invite.voteByDate %> </p>
+                                    <p><%= invite.description %> </p>
+                                <h4>Invited</h4>
+                                <!-- shows invited users -->
+                                <!-- invite accept and decline button logic -->
+                                <% if (invite.invitedIds.includes(user.id) && !invite.attendingIds.includes(user.id)) { %>
+                                <p> You were invited! Would you like to accept? </p>
+                                <a class="waves-effect btn-flat green-text acceptBtn">Accept!</a> <a class="waves-effect  btn-flat red-text declineBtn">No thanks!</a>
+                                <% } %>
+                                <!-- shows users who accepted invites -->
+                                <ul>
+                                    <% invite.invitedIds.forEach(userid => { %>
+                                        <!-- finds user with matching id to gamenights invited user ids -->
+                                        <% invitedUser = users.find(ele => ele._id == userid ) %>
+                                        <li>
+                                        <a href="/profile/<%= invitedUser.id %> "> <%= invitedUser.userName %> </a>
+                                        </li>
+                                    <% }) %>
+                                    </ul>
+
+                                <h4>Attending</h4>
+                                <!-- shows users who accepted invites -->
+                                <ul>
+                                    <% invite.attendingIds.forEach(userid => { %>
+                                        <!-- finds user with matching id to gamenights invited user ids -->
+                                        <% attendingUser = users.find(ele => ele._id == userid ) %>
+                                        <li>
+                                        <a href="/profile/<%= attendingUser.id %> "> <%= attendingUser.userName %> </a>
+                                        </li>
+                                    <% }) %>
+                                </ul>
+
+                                <h4>Game Choices</h4>
+                                <!-- shows game choices TODO: ADD VOTE BUTTONS -->
+                                    <% invite.games.forEach(game => { %>
+                                    <span> <%= game.title %> </span>
+                                    <% }) %> 
+                            
+                        </li>
+                        </div>
+                
+                        <% } %>
+                    <% }) %>
+                </ul>
+        </div>
+    </div>
+    
+   
+    <script src="js/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
