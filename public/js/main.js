@@ -5,6 +5,7 @@ const todoComplete = document.querySelectorAll('span.completed')
 const inviteBtn = document.querySelectorAll('.inviteBtn')
 const acceptBtn = document.querySelectorAll('.acceptBtn')
 const declineBtn = document.querySelectorAll('.declineBtn')
+const postCommentBtn = document.querySelectorAll('.postCommentBtn')
 
 //event listener placements
     Array.from(deleteBtn).forEach((el)=>{
@@ -24,6 +25,9 @@ const declineBtn = document.querySelectorAll('.declineBtn')
     })
     Array.from(declineBtn).forEach((el)=>{
         el.addEventListener('click', declineInvite)
+    })
+    Array.from(postCommentBtn).forEach((el)=>{
+        el.addEventListener('click', postComment)
     })
 
 //Invite, accept, and decline functions
@@ -101,6 +105,34 @@ async function deleteGameNight(){
             headers: {'Content-type': 'application/json'},
             body: JSON.stringify({
                 'gameNightIdFromJSFile': gameNightId
+            })
+        })
+        const data = await response.json()
+        console.log(data)
+        location.reload()
+    }catch(err){
+        console.log(err)
+    }
+}
+
+//comment Functions
+async function postComment(){
+    console.log('commentPosted')
+    console.log(this.parentNode.dataset)
+    const userId = this.parentNode.dataset.userid
+    const userName = this.parentNode.dataset.username
+    const gameNightId = this.parentNode.parentNode.parentNode.dataset.id
+    const commentInput = this.previousElementSibling.value
+
+    try{
+        const response = await fetch('comment/createComment', {
+            method: 'post',
+            headers: {'Content-type': 'application/json'},
+            body: JSON.stringify({
+                'gameNightIdFromJSFile': gameNightId,
+                'comment': commentInput,
+                'userId': userId,
+                'userName': userName
             })
         })
         const data = await response.json()

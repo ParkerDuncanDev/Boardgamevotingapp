@@ -1,6 +1,6 @@
 const GameNight = require('../models/GameNight')
 const User = require('../models/User')
-
+const Comments = require('../models/Comments')
 
 module.exports = {
     getGameNights: async (req,res)=>{
@@ -10,12 +10,14 @@ module.exports = {
             const invitedGameNights = await GameNight.find({invitedIds:req.user.id.toString()})
             const attendingGameNights = await GameNight.find({attendingIds:req.user.id})
             const users = await User.find().select("-password")
+            const comments = await Comments.find()
             res.render('gamenight.ejs', {userGameNights: userGameNights,
                                          invitedGameNights: invitedGameNights,
                                          attendingGameNights: attendingGameNights,
                                          //this is ALL users
                                          users: users,
                                          //this is the CLIENT user
+                                         comments: comments,
                                          user: req.user})
         }catch(err){
             console.log(err)
