@@ -1,6 +1,7 @@
 const User = require('../models/User')
 const GameNight = require('../models/GameNight')
 
+
 module.exports = {
     getProfile: async (req,res)=>{
         const userId = req.params.id
@@ -28,5 +29,31 @@ module.exports = {
         }catch(err){
             console.log(err)
         }
+    },
+    getFriends: async (req,res)=>{
+        const user = req.user
+        try {
+            const friends = await find({_id: {$in: user.friendIds}}).select('-password')
+            res.render('friends.ejs', {friends:friends})          
+        } catch (error) {
+           console.log(err) 
+        }
+    },
+    addFriend: async (req,res)=>{
+        const user = req.body.userId.toString()
+        const friend = req.body.friendId.toString()
+        console.log(req.body)
+        console.log(user, friend)
+        try {
+            console.log(`sending friend request`)
+            await User.findByIdAndUpdate(friend, {
+                $addToSet: {friendRequests: user}
+            })
+            console.log(`friend request sent`)
+            res.json('friend request sent')
+        } catch (error) {
+            console.log(error)
+        }
+
     }
 }    

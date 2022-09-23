@@ -7,12 +7,11 @@ router.get('/', ensureAuth, profileController.getProfileForOwner)
 
 router.get('/:id', ensureAuth, profileController.getProfile)
 
+ router.get('/friends', profileController.getFriends)
 
-// router.post('/createTodo', shelfController.createTodo)
+ router.put('/friends/add', profileController.addFriend)
 
-// router.put('/markComplete', shelfController.markComplete)
-
-// router.put('/markIncomplete', shelfController.markIncomplete)
+//  router.delete('/friends/remove/:id', profileController.removeFriend)
 
 // router.delete('/deleteTodo', shelfController.deleteTodo)
 

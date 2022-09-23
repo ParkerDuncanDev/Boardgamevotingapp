@@ -32,6 +32,14 @@ const UserSchema = new mongoose.Schema({
       type: String,
       default: 'This user has not made a bio yet'
     },
+    friendRequests: {
+      type: Array,
+      default:[]
+    },
+    friendIds: {
+      type: Array,
+      default: []
+    },
     
   password: String,
 })
