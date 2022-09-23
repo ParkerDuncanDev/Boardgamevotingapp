@@ -5,6 +5,7 @@
         <h2>My Game Nights</h2>
             <ul>
             <% userGameNights.forEach( el => { %>
+                <% gameNightId = el._id %> 
                 <div class="card green lighten-4">
                     <li class='userGameNights' data-id='<%= el._id %>'>
                         <!-- info -->
@@ -66,6 +67,26 @@
                                 <label for="email_inline">Game Title</label>
                             </div>
                         </div>
+                        <!-- comments -->
+                        <div>
+                            <h4>Comments</h4>
+                                <div data-userId='<%=user.id%>' data-userName='<%=user.userName%>'>
+                                    <input type="text" class="commentInput" placeholder="comment..." >
+                                    <button class="btn waves-effect waves-light postCommentBtn" type="submit" name="action" >Post Comment
+                                    </button>
+                                </div>
+                                <div>
+                                    <!-- shows users who accepted invites -->
+                                <% comments.forEach(comment => { %>
+                                    <!-- finds user with matching id to gamenights invited user ids -->
+                                    <% if (comment.gameNightId == gameNightId) { %>
+                                    <p class="commentUserName blue-text"> <%= comment.userName %></p>
+                                    <span class="commentDate"><%= comment.date.toDateString() %></span>
+                                    <p> <blockquote> <%= comment.comment %> </blockquote></p>
+                                    <% } %>
+                                <% }) %> 
+                                </div>
+                        </div>
                         <!-- delete Button -->
                         <div class="right-align">
                         <a class="waves-effect waves-teal btn-flat red-text del">delete</a>
@@ -78,6 +99,7 @@
         <h2>Attending</h2>
             <ul>
             <% attendingGameNights.forEach( el => { %>
+                <% gameNightId = el._id %> 
                 <% if (el.creatorId != user.id) { %>
                  
                     <div class="card green lighten-4">
@@ -110,10 +132,10 @@
                                 <% }) %>
                             </ul>
                             <% } %>
-                        </div>
+                            </div>
                         
-                        <!-- attending -->
-                        <div class="left">
+                            <!-- attending -->
+                            <div class="left">
                             <h4>Attending</h4>
                             <!-- shows users who accepted invites -->
                             <ul>
@@ -127,6 +149,7 @@
                                 </ul>
                             </div>
                             <div class="clearfix"></div>
+
                             <!-- game Choices -->
                             <div class="center-align">
                                 <h4>Game Choices</h4>
@@ -135,9 +158,30 @@
                                 <% el.games.forEach(game => { %>
                                     <span> <%= game.title %> </span>
                                     <% }) %> 
-                                </div>
-                            </li>
-                        </div>
+                            </div>
+
+                            <!-- comments -->
+                            <div>
+                                <h4>Comments</h4>
+                                    <div data-userId='<%=user.id%>' data-userName='<%=user.userName%>'>
+                                        <input type="text" class="commentInput" placeholder="comment..." >
+                                        <button class="btn waves-effect waves-light postCommentBtn" type="submit" name="action" >Post Comment
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <!-- shows users who accepted invites -->
+                                    <% comments.forEach(comment => { %>
+                                        <!-- finds user with matching id to gamenights invited user ids -->
+                                        <% if (comment.gameNightId == gameNightId) { %>
+                                        <p class="commentUserName blue-text"> <%= comment.userName %></p>
+                                        <span class="commentDate"><%= comment.date.toDateString() %></span>
+                                        <p> <blockquote> <%= comment.comment %> </blockquote></p>
+                                        <% } %>
+                                    <% }) %> 
+                                    </div>
+                            </div>
+                        </li>
+                    </div>
                         <% } %>
                         <% }) %>  
             </ul>  
