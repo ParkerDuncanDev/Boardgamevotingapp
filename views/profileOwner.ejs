@@ -2,6 +2,7 @@
 <body>
     <div class="container">
         <h1>Welcome back <%= profile.userName %> </h1>
+
         <!-- profile and bio -->
         <div class="row">
 
@@ -19,6 +20,23 @@
                     <p> <%= profile.bio %> </p>
             </div>
 
+        </div>
+
+        <!-- friend requests -->
+        <div class="row">
+            <ul>
+                <% user.friendRequests.forEach(userid => { %>
+                    <!-- finds user with matching id to gamenights invited user ids -->
+                    <% requestingUser = users.find(ele => ele._id == userid ) %>
+                    <li>
+                    <p>
+                        <a href="/profile/<%= requestingUser.id %> "> <%= requestingUser.userName %></a> sent you a friend request! Would you like to accept?
+                        <a class="waves-effect btn-flat green-text friendAcceptBtn" data-requesterid="<%= requestingUser.id %>" data-userid="<%= user.id %>"> Accept!</a>
+                        <a class="waves-effect  btn-flat red-text friendDeclineBtn" data-requesterid="<%= requestingUser.id %>" data-userid="<%= user.id %>"> Decline! </a>
+                    </p>
+                    </li>
+                <% }) %>    
+            </ul>
         </div>
 
         <!-- invites -->
@@ -75,6 +93,8 @@
                     <% }) %>
                 </ul>
         </div>
+
+
     </div>
     
    

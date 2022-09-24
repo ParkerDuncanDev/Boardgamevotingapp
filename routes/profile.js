@@ -5,11 +5,16 @@ const { ensureAuth, ensureGuest } = require('../middleware/auth')
 
 router.get('/', ensureAuth, profileController.getProfileForOwner)
 
+router.get('/friends', profileController.getFriends)
+
 router.get('/:id', ensureAuth, profileController.getProfile)
 
- router.get('/friends', profileController.getFriends)
 
  router.put('/friends/add', profileController.addFriend)
+
+ router.put('/friends/accept', profileController.acceptFriend)
+
+ router.put('/friends/decline', profileController.declineFriend)
 
 //  router.delete('/friends/remove/:id', profileController.removeFriend)
 

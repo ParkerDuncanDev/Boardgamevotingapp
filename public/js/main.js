@@ -7,6 +7,8 @@ const acceptBtn = document.querySelectorAll('.acceptBtn')
 const declineBtn = document.querySelectorAll('.declineBtn')
 const postCommentBtn = document.querySelectorAll('.postCommentBtn')
 const friendRequestBtn = document.querySelectorAll('.friendRequestBtn')
+const friendAcceptBtn = document.querySelectorAll('.friendAcceptBtn')
+const friendDeclineBtn = document.querySelectorAll('.friendDeclineBtn')
 
 //event listener placements
     Array.from(deleteBtn).forEach((el)=>{
@@ -32,6 +34,12 @@ const friendRequestBtn = document.querySelectorAll('.friendRequestBtn')
     })
     Array.from(friendRequestBtn).forEach((el)=>{
         el.addEventListener('click', sendFriendRequest)
+    })
+    Array.from(friendAcceptBtn).forEach((el)=>{
+        el.addEventListener('click', acceptFriendRequest)
+    })
+    Array.from(friendDeclineBtn).forEach((el)=>{
+        el.addEventListener('click', declineFriendRequest)
     })
 
 //Invite, accept, and decline functions
@@ -146,6 +154,7 @@ async function postComment(){
         console.log(err)
     }
 }
+//friend functions
 async function sendFriendRequest(){
     const friendId = this.dataset.profileid
     const userId = this.dataset.userid
@@ -160,6 +169,56 @@ async function sendFriendRequest(){
             headers: {'Content-type': 'application/json'},
             body: JSON.stringify({
                 'friendId': friendId,
+                'userId': userId
+            })
+        })
+        const data = await response.json()
+        console.log(data)
+        location.reload()
+    }catch(err){
+        console.log(err)
+    }
+    
+}
+async function acceptFriendRequest(){
+    const requesterId = this.dataset.requesterid
+    const userId = this.dataset.userid
+    
+    console.log(requesterId)
+    console.log(userId)
+    console.log('accepting friend request')
+    
+    try{
+        const response = await fetch('/profile/friends/accept', {
+            method: 'put',
+            headers: {'Content-type': 'application/json'},
+            body: JSON.stringify({
+                'requesterId': requesterId,
+                'userId': userId
+            })
+        })
+        const data = await response.json()
+        console.log(data)
+        location.reload()
+    }catch(err){
+        console.log(err)
+    }
+    
+}
+async function declineFriendRequest(){
+    const requesterId = this.dataset.requesterid
+    const userId = this.dataset.userid
+    
+    console.log(requesterId)
+    console.log(userId)
+    console.log('accepting friend request')
+    
+    try{
+        const response = await fetch('/profile/friends/decline', {
+            method: 'put',
+            headers: {'Content-type': 'application/json'},
+            body: JSON.stringify({
+                'requesterId': requesterId,
                 'userId': userId
             })
         })

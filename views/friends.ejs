@@ -1,0 +1,15 @@
+<%- include('partials/header') -%>
+
+<!-- friend list -->
+<div>
+    <ul>
+    <% friends.forEach(friend => { %>
+    <li>
+    <p>
+        <a href="/profile/<%= friend.id %> "> <%= friend.userName %></a> 
+    </p>
+    </li>
+    <% }) %>
+    </ul>
+</div>
+<%- include('partials/footer') -%>

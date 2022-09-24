@@ -31,12 +31,13 @@ module.exports = {
         }
     },
     getFriends: async (req,res)=>{
+        console.log('getting friends')
         const user = req.user
         try {
-            const friends = await find({_id: {$in: user.friendIds}}).select('-password')
+            const friends = await User.find({_id: {$in: user.friendIds}}).select('-password')
             res.render('friends.ejs', {friends:friends})          
         } catch (error) {
-           console.log(err) 
+           console.log(error) 
         }
     },
     addFriend: async (req,res)=>{
@@ -55,5 +56,44 @@ module.exports = {
             console.log(error)
         }
 
-    }
+    },
+    acceptFriend: async (req,res)=>{
+        const user = req.body.userId.toString()
+        const requester = req.body.requesterId.toString()
+        console.log(req.body)
+        console.log(user, requester)
+        try {
+            console.log(`accepting friend request`)
+            await User.findByIdAndUpdate(user, {
+                $addToSet: {friendIds: requester},
+                $pull: {friendRequests: requester}
+            })
+            await User.findByIdAndUpdate(requester, {
+                $addToSet: {friendIds: user}
+            })
+            console.log(`friend request accepting`)
+            res.json('friend request accepting')
+        } catch (error) {
+            console.log(error)
+        }
+
+    },
+    declineFriend: async (req,res)=>{
+        const user = req.body.userId.toString()
+        const requesterId = req.body.requesterId.toString()
+        console.log(req.body)
+        console.log(user, requesterId)
+        try {
+            console.log(`declining friend request`)
+            await User.findByIdAndUpdate(user, {
+                $pull: {friendRequests: requester}
+            })
+            console.log(`friend request declined`)
+            res.json('friend request declined')
+        } catch (error) {
+            console.log(error)
+        }
+
+    },
+
 }    
